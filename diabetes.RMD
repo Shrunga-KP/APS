@@ -1,0 +1,37 @@
+---
+title: "Graphing with ggplot"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+diabetesData=read.csv('Data/diabetes.csv',header=TRUE)
+```
+
+```{r}
+head(diabetesData)
+```
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+p=ggplot(data=diabetesData)
+```
+
+```{r}
+p=ggplot(data=diabetesData) + 
+  geom_point(aes(x=Age,y=BMI))
+p
+```
+
+```{r}
+p=ggplot(data=diabetesData) + 
+  geom_point(aes(x=Age,y=Insulin))
+p
+
+```

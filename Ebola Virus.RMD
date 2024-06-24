@@ -1,0 +1,84 @@
+---
+title: "Assignment1-Ebola virus"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+#Reading the Bats.csv data 
+dfBatsData=read.csv("Data/bats.csv")
+```
+
+```{r}
+#a)What is the chance of a random bat carrying the Ebola virus?
+#Its calculating the fraction of bats having ebola virus=TRUE
+mean(dfBatsData$Ebola==TRUE)
+mean(dfBatsData$Ebola==TRUE)*100
+```
+
+```{r}
+#b)For each gene, calculate the likelihood that it is expressed in a random bat.
+#Likelihood of Gene1
+mean(dfBatsData$Gene.1==TRUE)
+mean(dfBatsData$Gene.1==TRUE)*100
+```
+
+```{r}
+#Likelihood of Gene2
+mean(dfBatsData$Gene.2==TRUE)
+mean(dfBatsData$Gene.2==TRUE)*100
+```
+
+```{r}
+#Likelihood of Gene3
+mean(dfBatsData$Gene.3==TRUE)
+mean(dfBatsData$Gene.3==TRUE)*100
+```
+
+```{r}
+#Likelihood of Gene4
+mean(dfBatsData$Gene.4==TRUE)
+mean(dfBatsData$Gene.4==TRUE)*100
+```
+
+```{r}
+#Likelihood of Gene5
+mean(dfBatsData$Gene.5==TRUE)
+mean(dfBatsData$Gene.5==TRUE)*100
+```
+
+```{r}
+#c)Is the presence or absence of any of the genes indicative of a random bat potentially carrying the Ebola virus
+#Likelihood of a bat carrying the Ebola virus given the presence of Gene1
+
+mean(dfBatsData[dfBatsData$Gene.1==TRUE,]$Ebola==TRUE)
+mean(dfBatsData[dfBatsData$Gene.1==TRUE,]$Ebola==TRUE)*100
+```
+
+```{r}
+#Likelihood of a bat carrying the Ebola virus given the presence of Gene2
+mean(dfBatsData[dfBatsData$Gene.2==TRUE,]$Ebola==TRUE)
+mean(dfBatsData[dfBatsData$Gene.2==TRUE,]$Ebola==TRUE)*100
+```
+
+```{r}
+#Likelihood of a bat carrying the Ebola virus given the presence of Gene3
+mean(dfBatsData[dfBatsData$Gene.3==TRUE,]$Ebola==TRUE)
+mean(dfBatsData[dfBatsData$Gene.3==TRUE,]$Ebola==TRUE)*100
+```
+
+```{r}
+#Likelihood of a bat carrying the Ebola virus given the presence of Gene4
+mean(dfBatsData[dfBatsData$Gene.4==TRUE,]$Ebola==TRUE)
+mean(dfBatsData[dfBatsData$Gene.4==TRUE,]$Ebola==TRUE)*100
+```
+
+```{r}
+#Likelihood of a bat carrying the Ebola virus given the presence of Gene5
+mean(dfBatsData[dfBatsData$Gene.5==TRUE,]$Ebola==TRUE)
+mean(dfBatsData[dfBatsData$Gene.5==TRUE,]$Ebola==TRUE)*100
+```

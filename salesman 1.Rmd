@@ -1,0 +1,105 @@
+---
+title: "salesman"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+s_appointment=c(0,1)
+sample(s_appointment,size=10,replace=TRUE,prob=c(0.7,0.3))#Sample space with the probability of morning sale
+sample(s_appointment,size=10,replace=TRUE,prob=c(0.6,0.4))#Sample space with the probability of afternoon sale
+```
+
+```{r}
+p_morning=0.3
+p_afternoon=0.6
+p_appointment=matrix(nrow=2,ncol=2,c(1-p_morning,p_morning,1-p_afternoon,p_afternoon),byrow=TRUE)
+p_appointment
+```
+
+```{r}
+s_software=c(5000,10000)
+```
+
+```{r}
+p_software=matrix(nrow=2,ncol=2,c(0.3,0.7,0.5,0.5),byrow=TRUE)
+p_software
+```
+```{r}
+sample(s_software,size=100,replace=TRUE,prob = p_software[1,])
+```
+
+```{r}
+salesResult=function(){
+  result=numeric(2)
+  for(j in c(1:2)){
+    result[j]=sample(s_appointment,size=1,replace=TRUE,prob=p_appointment[j,])
+  }
+  earnings=ifelse(result[1]==1,sample(s_software,size=1,replace=TRUE,prob=p_software[1,]),0)+ifelse(result[2]==1,sample(s_software,size=1,replace=TRUE,prob=p_software[2,]),0)
+ return(earnings)
+}
+```
+
+```{r}
+nsimulations=100000
+simulatedData=replicate(nsimulations,salesResult())
+```
+
+```{r}
+simulatedData
+```
+
+
+```{r}
+mean(simulatedData==5000)
+```
+```{r}
+table(simulatedData) / nsimulations
+```
+
+```{r}
+dfSales=as.data.frame(simulatedData)
+colnames(dfSales)=c("Earnings")
+head(dfSales)
+```
+```{r}
+p=ggplot(data=dfSales)+
+  geom_bar(aes(x=Earnings),fill='steelblue')
+```
+
+```{r}
+p
+```
+```{r}
+dfSales=as.data.frame(table(simulatedData))
+head(dfSales)
+```
+```{r}
+colnames(dfSales)=c("Earnings","Frequency")
+head(dfSales)
+```
+```{r}
+dfSales["Probabilty"]=dfSales["Frequency"]/nsimulations
+head(dfSales)
+```
+
+
+```{r}
+p=ggplot(data=dfSales)+
+  geom_col(aes(x=Earnings,y=Frequency),fill="steelblue")
+```
+
+```{r}
+p
+```
+```{r}
+#Probability math function visualization
+p=ggplot(data=dfSales)+
+  geom_col(aes(x=Earnings,y=Probabilty),fill="steelblue",width=0.3)+labs(title="Probabilty Mass Function for Salesman Problem")
+p
+
+```
+

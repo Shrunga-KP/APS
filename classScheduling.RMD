@@ -1,0 +1,60 @@
+---
+  title: "Class scheduling problem. Find the probability of scheduling 3 classes in a week, such that no 2 lectures to be on a same day and all classes to be on a weekday"
+output:
+  pdf_document: default
+html_document:
+  df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+#### Sampling space is the 7 days in a week and events are equally likely.
+  
+```{r}
+s=c("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
+p=replicate(7,1/7)
+S=sample(s,3,replace=FALSE,prob=p)
+S
+```
+```{r}
+simTrail=function(){
+  return(sample(s,3,replace=FALSE,prob=p))
+}
+```
+
+```{r}
+nsimulations=1000000
+simulatedData=replicate(nsimulations,simTrail())
+#simulatedData
+```
+
+
+#### In a schedule, if a weekend is present return zero, otherwise 1
+```{r}
+checkEvent=function(data){
+  f=0
+  for(j in data){
+    if(j %in% c('Sat','Sun')){
+      f=1
+      break
+    }
+    
+  }
+  if(f==1){
+    return(0)
+  }
+  else{
+    return(1)
+  }
+}
+```
+
+
+#### Get the fraction where the resultant vector has 1
+```{r}
+mean(apply(simulatedData,2,checkEvent))
+```
+```{r}
+choose(5,3)/choose(7,3)
+```
+

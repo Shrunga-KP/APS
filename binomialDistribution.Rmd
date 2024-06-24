@@ -1,0 +1,236 @@
+---
+title: "binomialDistribution"
+output: html_document
+date: "2023-10-03"
+---
+
+####Hyper geometry comes into picture if we have finite population like people,animals or products where we can identify the sample space being generated without replacement clearly.
+
+#### All d function calculates the probability mass function and the p function calculates the cumulative function
+#### An oil company has a 20% chance of striking oil when drilling a well. What is the probability the company strikes oil 5 out of the next 10 attempts
+```{r}
+n=10
+p=0.2
+s=5
+dbinom(s,n,p)#Binomial distribution
+```
+
+#### An oil company has a 20% chance of striking oil when drilling a well. What is the probability the company strikes oil atmost 5 out of the next 10 attempts
+p(X=0)+p(X=1)+p(X=2)+p(X=3)+p(X=4)+p(X=5)
+```{r}
+n=10
+p=0.2
+sum(dbinom(0:5,n,p))
+dbinom(0,n,p)+dbinom(1,n,p)+dbinom(2,n,p)+dbinom(3,n,p)+dbinom(4,n,p)+dbinom(5,n,p)
+pbinom(5,n,p)#Cumulative probability from X=0 to X=5
+```
+#### People arrive to donate blood. 42% of them have O type blood. What is the probability 30 of 120 have type O blood.
+Hyper Geometry random variable
+
+```{r}
+dbinom(30,120,0.42)#Binomial Distribution
+
+nsuccess=420000
+nfailures=580000
+n=120
+j=30
+dhyper(j,nsuccess,nfailures,n)#Hyper Geometry random variable
+```
+#### When sample size is too small when compared to the population then it's safe to switch between binomial distribution or hyper geometry random variable
+
+```{r}
+dbinom(3,4,0.99)
+dhyper(3,9900,100,4)
+```
+
+```{r}
+dbinom(4,9000,0.4)
+dhyper(4,4000,6000,9000)
+```
+#### An oil drilling company has a 20% chance of striking oil when drilling a well. What is the probability that the company drills 7 times to strike oil the 3rd trial?
+#### Negative Binomial Variable
+
+```{r}
+p=0.2
+r=3
+j=7
+#For negative binomial we will not directly give the number of success trials we are interested in. Instead we will feed  the number of failures that we obtain before getting r successes.
+dnbinom(j-r,r,p)
+```
+####In an airport, it is known that approximately 2 our of 10 passengers have a metallic object. If left undetected at manual security check at the airport entrance. Such a metallic object will raise an alarm when the passenger walks through the automated screening machine. It is considered as security breach if the alarm is raised for 20times a day. What is the probability of a security breach on a particular day when the total 100th passenger walks through the automated screening machine? 
+
+```{r}
+#Negative binomial
+p=0.2
+r=20
+j=100
+dnbinom(j-r,r,p)
+```
+
+#### There are 48 out of 50 itsems are defective. What is the probability of getting atleast 3 items defective when 45 itsems are taken.
+```{r}
+#Hyper geometry distribution
+p=48/50
+nsuccess=48
+nfailure=2
+n=45
+#success X>=1 or 1-X=0
+x=0
+1-dhyper(x,nsuccess,nfailure,n)
+```
+#### A person conducting a telephone survey must get 4 or more surveys. But there is 90% chance that call gets rejected. What is the probability person has to do 10 more calls?
+
+```{r}
+#Negative binomial
+p=0.10 #success rate = Call being accepted. 100-90=10%
+j=10
+r=4
+dnbinom(j-r,r,p)
+```
+#### A certain stoplight, when coming from the North is green approximately 31% of the time. Over the next few days, someone comes to the light 8 times from North. We are interetsed in the probability that the person will come across green light 5 times.
+```{r}
+n=8
+p=0.31
+r=5
+dbinom(r,n,p)
+```
+```{r}
+n=8
+p=0.31
+sum(dbinom((5:8),n,p)) #P(x>=5)
+pbinom(4,n,p) #P(X<=4)
+1-pbinom(4,n,p) #P(X>=5)
+```
+#### An oil drilling company has a record of 2000 times of striking oil in 10000 times. What is the probability that the company strikes oil 7 times out of 20?
+
+```{r}
+n=20
+nsuccess=2000
+nfailures=8000
+x=7
+dhyper(x,nsuccess,nfailures,n)
+```
+
+#### An oil drilling company has a record of 4 times of striking oil in 10 times. What is the probability that the company strikes oil exactly 2 times, atleast 2 times and atmost 2 times.
+```{r}
+p=4/10
+n=4
+r=2
+dbinom(r,n,p)#Exactly 2
+pbinom(2,n,p)#Atmost 2
+1-pbinom(1,n,p)#Atleast 2
+```
+#### rbinom is used to get it in the form of simulations.
+
+```{r}
+nsimulations=100000
+simulatedData=rbinom(100000,n,p)
+```
+
+```{r}
+simulatedData
+```
+#### Getting oil exactly 2 times
+```{r}
+mean(simulatedData==2)
+```
+
+#### Getting oil atleast 2 times
+```{r}
+mean(simulatedData>=2)
+```
+#### Getting oil atmost 2 times
+```{r}
+mean(simulatedData<=2)
+```
+#### Converting the simulatedData to a dataframe because the ggplot can work only on a table/data frame
+```{r}
+dfOil=as.data.frame(simulatedData)
+colnames(dfOil)=c("OilDrilling")
+head(dfOil)
+```
+```{r}
+library(ggplot2)
+```
+
+#### Getting the plot for the frequencies
+```{r}
+p=ggplot(data=dfOil)+
+  geom_bar(aes(x=OilDrilling),fill='steelblue',width=0.1)
+```
+
+```{r}
+p
+```
+#### Converting the simulatedData to table so that we can get the frequencies as one column
+
+```{r}
+dfOil=as.data.frame(table(simulatedData))
+head(dfOil)
+```
+#### Renaming the column names
+```{r}
+colnames(dfOil)=c("OilDrilling","Frequency")
+head(dfOil)
+```
+#### Getting one more column with probability values
+```{r}
+dfOil["Probability"]=dfOil["Frequency"]/nsimulations
+head(dfOil)
+
+```
+#### PMF - Probability mass function
+
+```{r}
+p=ggplot(data=dfOil)+
+  geom_col(aes(x=OilDrilling,y=Probability),fill="steelblue",width=0.1)
+```
+
+```{r}
+p
+```
+
+####Adding one more column with cumulative probability sum
+```{r}
+dfOil["cdf"]=cumsum(dfOil["Probability"])
+head(dfOil)
+```
+##### Getting the plot for CDF - Cumulative Distribution Function using cumsum. P(x=0),P(X<=1),P(X<=2)....
+```{r}
+p=ggplot(data=dfOil)+
+  geom_col(aes(x=OilDrilling,y=cdf),fill="red",width=0.1)
+p
+```
+
+
+
+####Getting the plot for CDF - Cumulative Distribution Function. P(x=0),P(X<=1),P(X<=2)....
+```{r}
+n=4
+p=0.4
+cdf=pbinom(c(0:4),n,p)
+p=ggplot(data=dfOil)+
+  geom_col(aes(x=OilDrilling,y=cdf),fill="blue",width=0.1)
+```
+
+```{r}
+p
+```
+```{r}
+n=4
+p=0.4
+nsimulations=100
+simulatedData=rsbinom(nsimulations,n,p)
+mean(simulatedData)
+```
+```{r}
+j=c(0:4)
+k=dbinom(j,n,p)
+k
+sum(j*k)
+```
+#### Expected value of a binomial random variable to be n*p
+#### Expected value of a hyper geometry random variable to be n*p
+#### Expected value of a negative random variable to be r/p
+
+
